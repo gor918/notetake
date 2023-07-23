@@ -40,7 +40,7 @@ const Content: React.FC = () => {
       onSuccess: (data) => {
         setSelectedTopic(selectedTopic ?? data[0] ?? null);
       },
-    }
+    },
   );
 
   const createTopic = api.topic.create.useMutation({
@@ -55,7 +55,7 @@ const Content: React.FC = () => {
     },
     {
       enabled: sessionData?.user !== undefined && selectedTopic !== null,
-    }
+    },
   );
 
   const createNote = api.note.create.useMutation({
@@ -70,6 +70,13 @@ const Content: React.FC = () => {
     },
   });
 
+  const deleteTopic = api.topic.deleteWithNotes.useMutation({
+    onSuccess: () => {
+      void refetchTopics();
+      void refetchNotes();
+    },
+  });
+
   if (sessionData?.user === undefined) {
     return null;
   }
@@ -77,26 +84,42 @@ const Content: React.FC = () => {
   return (
     <div className="mx-5 mt-5 grid grid-cols-4 gap-2">
       <div className="px-2">
-        <ul className="menu rounded-box w-56 bg-base-100 p-2">
+        <ul className="menu rounded-box w-full bg-base-100 p-2">
           {topics?.map((topic) => (
-            <li key={topic.id}>
-              <a
-                href="#"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  setSelectedTopic(topic);
-                }}
-              >
-                {topic.title}
-              </a>
+            <li
+              key={topic.id}
+              className="align-center flex w-full flex-row items-center justify-between "
+            >
+              <div>
+                <a
+                  href="#"
+                  onClick={(evt) => {
+                    evt.preventDefault();
+                    setSelectedTopic(topic);
+                  }}
+                >
+                  {topic.title}
+                </a>
+              </div>
+
+              <div>
+                <button
+                  className="btn btn-error btn-xs"
+                  onClick={() => void deleteTopic.mutate({ id: topic.id })}
+                >
+                  delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
+
         <div className="divider"></div>
+
         <input
           type="text"
           placeholder="New Topic"
-          className="input-bordered input input-sm w-full"
+          className="input input-bordered input-sm w-full"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               createTopic.mutate({
@@ -107,6 +130,7 @@ const Content: React.FC = () => {
           }}
         />
       </div>
+
       <div className="col-span-3">
         <div>
           {notes?.map((note) => (
