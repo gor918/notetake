@@ -90,17 +90,16 @@ const Content: React.FC = () => {
               key={topic.id}
               className="align-center flex w-full flex-row items-center justify-between "
             >
-              <div>
-                <a
-                  href="#"
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    setSelectedTopic(topic);
-                  }}
-                >
-                  {topic.title}
-                </a>
-              </div>
+              <a
+                href="#"
+                onClick={(evt) => {
+                  evt.preventDefault();
+                  setSelectedTopic(topic);
+                }}
+                className={selectedTopic?.id === topic.id ? "font-bold" : ""}
+              >
+                {topic.title}
+              </a>
 
               <div>
                 <button
@@ -143,15 +142,25 @@ const Content: React.FC = () => {
           ))}
         </div>
 
-        <NoteEditor
-          onSave={({ title, content }) => {
-            void createNote.mutate({
-              title,
-              content,
-              topicId: selectedTopic?.id ?? "",
-            });
-          }}
-        />
+        {selectedTopic !== null && (
+          <>
+            <h1>
+              Selected Topic: <b>{selectedTopic.title}</b>
+            </h1>
+
+            <div className="divider"></div>
+
+            <NoteEditor
+              onSave={({ title, content }) => {
+                void createNote.mutate({
+                  title,
+                  content,
+                  topicId: selectedTopic?.id ?? "",
+                });
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export const NoteEditor = ({
           <input
             type="text"
             placeholder="Note title"
-            className="input-primary input input-lg w-full font-bold"
+            className="input input-primary input-lg w-full font-bold"
             value={title}
             onChange={(e) => setTitle(e.currentTarget.value)}
           />
@@ -36,22 +36,22 @@ export const NoteEditor = ({
           onChange={(value) => setCode(value)}
           className="border border-gray-300"
         />
-      </div>
-      <div className="card-actions justify-end">
-        <button
-          onClick={() => {
-            onSave({
-              title,
-              content: code,
-            });
-            setCode("");
-            setTitle("");
-          }}
-          className="btn-primary btn"
-          disabled={title.trim().length === 0 || code.trim().length === 0}
-        >
-          Save
-        </button>
+        <div className="card-actions justify-end">
+          <button
+            onClick={() => {
+              onSave({
+                title,
+                content: code,
+              });
+              setCode("");
+              setTitle("");
+            }}
+            className="btn btn-primary"
+            disabled={title.trim().length === 0 || code.trim().length === 0}
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );
